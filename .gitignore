@@ -1,10 +1,4 @@
-# ignore all root items (files and folders)
-/*
-
-# unignore folders
-!nix
-
-# unignore files
-!.gitignore
-!README.md
-!flake.nix
+result
+.pre-commit-config.yaml
+.direnv
+dist-newstyle

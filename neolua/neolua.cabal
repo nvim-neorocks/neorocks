@@ -1,0 +1,41 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           neolua
+version:        0.1.0
+synopsis:       A CLI adapter to map Lua's CLI to Neovim's CLI for lua interpretation.
+category:       CLI
+homepage:       https://github.com/mrcjkb/neorocks-nix#readme
+bug-reports:    https://github.com/mrcjkb/neorocks-nix/issues
+author:         Marc Jakobi
+maintainer:     mrcjkb89@outlook.com
+copyright:      Copyright (c) 2023 Marc Jakobi
+license:        OtherLicense
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    ../LICENSE
+    ../CHANGELOG.md
+    ../CONTRIBUTORS
+
+source-repository head
+  type: git
+  location: https://github.com/mrcjkb/neorocks-nix
+
+executable neolua
+  main-is: NeoLua.hs
+  other-modules:
+      LuaOptions
+      Paths_neolua
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Werror -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Widentities -Wredundant-constraints -Wcpp-undef -Wunused-packages -Wno-deprecations -O2 -j +RTS -A256m -n4m -RTS -main-is NeoLua
+  build-depends:
+      base >=4.7 && <5
+    , optparse-applicative
+    , process
+    , text
+  default-language: Haskell2010

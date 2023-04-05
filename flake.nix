@@ -1,5 +1,10 @@
 {
-  description = "Nix flake CI template for GitHub Actions"; # TODO: Set description
+  description = "Luarocks with Neovim as the Lua interpreter";
+
+  nixConfig = {
+    extra-substituters = "https://mrcjkb.cachix.org";
+    extra-trusted-public-keys = "mrcjkb.cachix.org-1:KhpstvH5GfsuEFOSyGjSTjng8oDecEds7rbrI96tjA4=";
+  };
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -15,6 +20,11 @@
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -22,6 +32,7 @@
     nixpkgs,
     pre-commit-hooks,
     flake-utils,
+    neovim-nightly-overlay,
     ...
   }: let
     supportedSystems = [
@@ -32,40 +43,57 @@
     ];
   in
     flake-utils.lib.eachSystem supportedSystems (system: let
-      ci-overlay = import ./nix/ci-overlay.nix {};
+      overlay = import ./nix/overlay.nix {};
 
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
-          ci-overlay
+          overlay
+          neovim-nightly-overlay.overlay
         ];
       };
 
       pre-commit-check = pre-commit-hooks.lib.${system}.run {
         src = self;
         hooks = {
+          cabal2nix.enable = true;
           alejandra.enable = true;
           editorconfig-checker.enable = true;
           markdownlint.enable = true;
+          fourmolu.enable = true;
+          hpack.enable = true;
+          hlint.enable = true;
         };
         settings = {
-          markdownlint.config = {
-            MD024 = false; # Duplicate heading
-          };
+          alejandra.exclude = ["neolua/default.nix"];
         };
       };
 
-      devShell = pkgs.mkShell {
-        name = "devShell"; # TODO: Choose a name
-        inherit (pre-commit-check) shellHook;
-        buildInputs = with pkgs; [
-          zlib
-        ];
+      neoluaShell = pkgs.haskellPackages.shellFor {
+        name = "neolua-shell";
+        packages = p: with p; [neolua];
+        withHoogle = true;
+        buildInputs =
+          (with pkgs; [
+            haskell-language-server
+            cabal-install
+            zlib
+          ])
+          ++ (with pre-commit-hooks.packages.${system}; [
+            hlint
+            hpack
+            nixpkgs-fmt
+            fourmolu
+            cabal2nix
+          ]);
+        shellHook = ''
+          ${self.checks.${system}.pre-commit-check.shellHook}
+        '';
       };
     in {
       devShells = {
-        default = devShell;
-        inherit devShell;
+        default = neoluaShell;
+        inherit neoluaShell;
       };
 
       # overlays = {
@@ -75,10 +103,7 @@
       # };
 
       checks = {
-        formatting = pre-commit-check;
-        # inherit
-        #   (pkgs)
-        #   ;
+        inherit pre-commit-check;
       };
     });
 }

@@ -1,0 +1,42 @@
+name: neolua
+version: 0.1.0
+github: "mrcjkb/neorocks-nix"
+license: OtherLicense
+license-file: LICENSE
+author: "Marc Jakobi"
+maintainer: "mrcjkb89@outlook.com"
+copyright: "Copyright (c) 2023 Marc Jakobi"
+category: CLI
+synopsis: A CLI adapter to map Lua's CLI to Neovim's CLI for lua interpretation.
+
+extra-source-files:
+- ../LICENSE
+- ../CHANGELOG.md
+- ../CONTRIBUTORS
+
+dependencies:
+- base >= 4.7 && < 5
+
+executables:
+    neolua:
+      source-dirs: src
+      main: NeoLua.hs
+      dependencies:
+        - optparse-applicative
+        - text
+        - process
+      ghc-options:
+        - -Wall
+        - -Werror
+        - -Wincomplete-uni-patterns
+        - -Wincomplete-record-updates
+        - -Wpartial-fields
+        - -Widentities
+        - -Wredundant-constraints
+        - -Wcpp-undef
+        - -Wunused-packages
+        - -Wno-deprecations
+        - -O2
+        - -j
+        - +RTS -A256m -n4m -RTS
+        - -main-is NeoLua
