@@ -1,19 +1,17 @@
-# Nix flake GitHub Actions CI template
+# neorocks-nix
 
-A template for setting up GitHub Actions with [Nix flakes](https://nixos.wiki/wiki/Flakes).
+`neorocks-nix` is a **WIP** [Nix](https://nixos.org/) derivation
+that allows you to run [luarocks](https://luarocks.org/) with [Neovim](https://neovim.io/)
+(0.9 and nightly) as the Lua interpreter.
 
-![Nix](https://img.shields.io/badge/nix-0175C2?style=for-the-badge&logo=NixOS&logoColor=white)
+## Why?
 
-## Setup
+So you can use [busted](https://lunarmodules.github.io/busted/) to test your
+Neovim plugin with access to the Neovim LUA API.
 
-1. Click on [Use this template](https://github.com/MrcJkb/nix-flake-github-ci-template/generate)
-to start a repo based on this template. **Do _not_ fork it.**
-2. Set up a [Cachix binary cache](https://app.cachix.org/cache) and add the
-`CACHIX_AUTH_TOKEN` variable to the repository.
-3. Change the `name` fields in [`nix-build.yaml`](./.github/workflows/nix-build.yml).
-4. Add your tests to [`mkTest` in the `ci-overlay.nix`](./nix/ci-overlay.nix).
+## Usage
 
-## Contributing
+This is intended to be used with the [luarocks-tag-release](https://github.com/nvim-neorocks/luarocks-tag-release)
+GitHub action.
 
-All contributions are welcome!
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
+- [ ] TODO: Write documentation on how to use this locally.
