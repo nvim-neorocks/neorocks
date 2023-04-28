@@ -29,7 +29,7 @@ with final.lib; let
               ];
           })
         );
-        neolua-bin = generateOptparseApplicativeCompletion "neolua" neoluaPkg;
+        neolua-bin = final.haskellPackages.generateOptparseApplicativeCompletions ["neolua"] neoluaPkg;
       in {
         inherit neolua-bin;
       }
