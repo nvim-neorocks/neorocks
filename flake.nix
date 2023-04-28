@@ -70,7 +70,7 @@
 
       neoluaShell = pkgs.haskellPackages.shellFor {
         name = "neolua-shell";
-        packages = p: with p; [neolua];
+        packages = p: with p; [neolua-bin];
         withHoogle = true;
         buildInputs =
           (with pkgs; [
@@ -96,10 +96,6 @@
         inherit neoluaShell;
       };
 
-      overlays = {
-        default = overlay;
-      };
-
       packages = rec {
         default = neorocks-stable;
         neorocks-stable = pkgs.neorocks-stable;
@@ -110,5 +106,10 @@
       checks = {
         inherit pre-commit-check;
       };
-    });
+    })
+    // {
+      overlays = {
+        default = overlay;
+      };
+    };
 }
