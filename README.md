@@ -7,7 +7,7 @@ that allows you to run [luarocks](https://luarocks.org/) with [Neovim](https://n
 ## Why?
 
 So you can use [busted](https://lunarmodules.github.io/busted/) to test your
-Neovim plugin with access to the Neovim LUA API.
+Neovim plugin with access to the Neovim Lua API.
 
 ## Usage
 
