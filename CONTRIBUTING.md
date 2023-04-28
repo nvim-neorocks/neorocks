@@ -36,33 +36,9 @@ just run `direnv allow` and you will be dropped in this devShell.
 
 ## Tests
 
-To run tests locally
-
-```console
-nix-build -A ci
-```
-
-or (with flakes enabled)
-
-```console
-nix build .#checks.<your-system>.ci --print-build-logs
-```
-
-For formatting:
-
-```console
-nix-build -A formatting
-```
-
-or (with flakes enabled)
-
-```console
-nix build .#checks.<your-system>.formatting --print-build-logs
-```
-
 If you have flakes enabled and just want to run all checks that are available,
 run:
 
 ```console
-nix flake check --print-build-logs
+nix flake check -L
 ```
