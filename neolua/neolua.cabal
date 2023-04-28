@@ -13,13 +13,8 @@ bug-reports:    https://github.com/mrcjkb/neorocks-nix/issues
 author:         Marc Jakobi
 maintainer:     mrcjkb89@outlook.com
 copyright:      Copyright (c) 2023 Marc Jakobi
-license:        OtherLicense
-license-file:   LICENSE
+license:        GPL-2
 build-type:     Simple
-extra-source-files:
-    ../LICENSE
-    ../CHANGELOG.md
-    ../CONTRIBUTORS
 
 source-repository head
   type: git

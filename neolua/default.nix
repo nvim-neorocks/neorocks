@@ -10,6 +10,6 @@ mkDerivation {
   ];
   homepage = "https://github.com/mrcjkb/neorocks-nix#readme";
   description = "A CLI adapter to map Lua's CLI to Neovim's CLI for lua interpretation";
-  license = "unknown";
+  license = lib.licenses.gpl2Only;
   mainProgram = "neolua";
 }

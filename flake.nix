@@ -41,10 +41,9 @@
       "x86_64-darwin"
       "x86_64-linux"
     ];
+    overlay = import ./nix/overlay.nix {};
   in
     flake-utils.lib.eachSystem supportedSystems (system: let
-      overlay = import ./nix/overlay.nix {};
-
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
@@ -78,13 +77,14 @@
             haskell-language-server
             cabal-install
             zlib
+            haskellPackages.neolua-bin
           ])
           ++ (with pre-commit-hooks.packages.${system}; [
             hlint
             hpack
-            nixpkgs-fmt
             fourmolu
             cabal2nix
+            alejandra
           ]);
         shellHook = ''
           ${self.checks.${system}.pre-commit-check.shellHook}
@@ -96,11 +96,16 @@
         inherit neoluaShell;
       };
 
-      # overlays = {
-      # };
+      overlays = {
+        default = overlay;
+      };
 
-      # packages = {
-      # };
+      packages = rec {
+        default = neorocks-stable;
+        neorocks-stable = pkgs.neorocks-stable;
+        neorocks-nightly = pkgs.neorocks-nightly;
+        neolua-bin = pkgs.haskellPackages.neolua-bin;
+      };
 
       checks = {
         inherit pre-commit-check;
