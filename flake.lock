@@ -126,16 +126,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1683020768,
-        "narHash": "sha256-ZyZl6k9NWS5QPwD3NoAVz/eSgodQDvl+y+fu8MVbrHc=",
-        "owner": "nixos",
+        "lastModified": 1682951324,
+        "narHash": "sha256-KwWe/tvOtquUtyhhZzBGFe58waXSIpfleTTq48MS3TU=",
+        "owner": "mrcjkb",
         "repo": "nixpkgs",
-        "rev": "44f30edf5661d86fb3a95841c35127f3d0ea8b0f",
+        "rev": "15f758a6b51e849ab5c20daec3ebd273cccb56d0",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-unstable",
+        "owner": "mrcjkb",
+        "ref": "luarocks-test-fix",
         "repo": "nixpkgs",
         "type": "github"
       }

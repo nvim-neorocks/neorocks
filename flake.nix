@@ -7,7 +7,8 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:mrcjkb/nixpkgs/luarocks-test-fix";
 
     flake-compat = {
       url = "github:edolstra/flake-compat";
@@ -41,18 +42,13 @@
       "x86_64-darwin"
       "x86_64-linux"
     ];
-    neorocks-overlay = import ./nix/overlay.nix {};
-    neovim-nightly-overlay = final: prev: {
-      neovim-unwrapped = neovim-nightly.packages.${prev.system}.neovim;
-      neovim-nightly = neovim-nightly.packages.${prev.system}.neovim;
-    };
+    overlay = import ./nix/overlay.nix {neovim-input = neovim-nightly;};
   in
     flake-utils.lib.eachSystem supportedSystems (system: let
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
-          neorocks-overlay
-          neovim-nightly-overlay
+          overlay
         ];
       };
 
@@ -112,7 +108,7 @@
     })
     // {
       overlays = {
-        default = neorocks-overlay;
+        default = overlay;
       };
     };
 }

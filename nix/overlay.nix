@@ -1,4 +1,4 @@
-{}: final: prev:
+{neovim-input}: final: prev:
 with final.haskell.lib;
 with final.lib; let
   haskellPackages = prev.haskellPackages.override (old: {
@@ -36,6 +36,8 @@ with final.lib; let
     );
   });
 
+  neovim-nightly = neovim-input.packages.${prev.system}.neovim;
+
   mkNeoluaWrapper = neovim:
     final.pkgs.writeShellApplication {
       name = "neolua";
@@ -51,7 +53,7 @@ with final.lib; let
 
   neolua-stable-wrapper = mkNeoluaWrapper final.pkgs.neovim-unwrapped;
 
-  neolua-nightly-wrapper = mkNeoluaWrapper final.pkgs.neovim-nightly;
+  neolua-nightly-wrapper = mkNeoluaWrapper neovim-nightly;
 
   luajit = prev.pkgs.luajit.overrideDerivation (old: {
     postPatch = ''
