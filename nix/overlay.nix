@@ -36,33 +36,38 @@ with final.lib; let
     );
   });
 
+  mkNeoluaWrapper = neovim:
+    final.pkgs.writeShellApplication {
+      name = "neolua";
+      checkPhase = "";
+      runtimeInputs = [
+        haskellPackages.neolua-bin
+        neovim
+      ];
+      text = ''
+        neolua "$@";
+      '';
+    };
+
+  neolua-stable-wrapper = mkNeoluaWrapper final.pkgs.neovim-unwrapped;
+
+  neolua-nightly-wrapper = mkNeoluaWrapper final.pkgs.neovim-nightly;
+
   luajit = prev.pkgs.luajit.overrideDerivation (old: {
     postPatch = ''
       ${old.postPatch}
       mkdir -p $out/bin
-      ln -s ${haskellPackages.neolua-bin}/bin/neolua $out/bin/neolua
+      ln -s ${neolua-stable-wrapper}/bin/neolua $out/bin/neolua
+      ln -s ${neolua-nightly-wrapper}/bin/neolua $out/bin/neolua-nightly
     '';
   });
 
-  luarocks = prev.pkgs.luajitPackages.luarocks.overrideDerivation (old: {
+  neorocks = prev.pkgs.luajitPackages.luarocks.overrideDerivation (old: {
     nativeBuildInputs = with final; [pkgs.makeWrapper pkgs.installShellFiles luajit pkgs.unzip];
   });
-
-  mkNeorocks = nvim:
-    final.pkgs.symlinkJoin {
-      name = "neorocks";
-      paths = [
-        nvim
-        haskellPackages.neolua-bin
-        luarocks
-      ];
-    };
-  neorocks-stable = mkNeorocks final.pkgs.neovim;
-  neorocks-nightly = mkNeorocks final.pkgs.neovim-nightly;
 in {
   inherit
     haskellPackages
-    neorocks-stable
-    neorocks-nightly
+    neorocks
     ;
 }

@@ -21,10 +21,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # neovim-nightly-overlay = {
-    #   url = "github:nix-community/neovim-nightly-overlay";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    neovim-nightly = {
+      url = "github:neovim/neovim?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -32,7 +32,7 @@
     nixpkgs,
     pre-commit-hooks,
     flake-utils,
-    # neovim-nightly-overlay,
+    neovim-nightly,
     ...
   }: let
     supportedSystems = [
@@ -41,14 +41,18 @@
       "x86_64-darwin"
       "x86_64-linux"
     ];
-    overlay = import ./nix/overlay.nix {};
+    neorocks-overlay = import ./nix/overlay.nix {};
+    neovim-nightly-overlay = final: prev: {
+      neovim-unwrapped = neovim-nightly.packages.${prev.system}.neovim;
+      neovim-nightly = neovim-nightly.packages.${prev.system}.neovim;
+    };
   in
     flake-utils.lib.eachSystem supportedSystems (system: let
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
-          overlay
-          # neovim-nightly-overlay.overlay
+          neorocks-overlay
+          neovim-nightly-overlay
         ];
       };
 
@@ -97,9 +101,8 @@
       };
 
       packages = rec {
-        default = neorocks-stable;
-        neorocks-stable = pkgs.neorocks-stable;
-        # neorocks-nightly = pkgs.neorocks-nightly;
+        default = neorocks;
+        neorocks = pkgs.neorocks;
         neolua-bin = pkgs.haskellPackages.neolua-bin;
       };
 
@@ -109,7 +112,7 @@
     })
     // {
       overlays = {
-        default = overlay;
+        default = neorocks-overlay;
       };
     };
 }
