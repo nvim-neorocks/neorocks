@@ -110,11 +110,11 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1683066667,
-        "narHash": "sha256-rVMacytoryzdOIElAh5mCQDuFMhrUdmbETY/YsyFoWs=",
+        "lastModified": 1683069669,
+        "narHash": "sha256-o1Ww14vxQVzsBBspZ9PXLIwD1ojIO8k/ijMFHihENBU=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "9909668111f521c7fc829ec8d8aa89beafff8777",
+        "rev": "62ecb05957f43b140e7dd874e1f84e3a6fa99838",
         "type": "github"
       },
       "original": {
@@ -126,16 +126,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1682951324,
-        "narHash": "sha256-KwWe/tvOtquUtyhhZzBGFe58waXSIpfleTTq48MS3TU=",
-        "owner": "mrcjkb",
+        "lastModified": 1683020768,
+        "narHash": "sha256-ZyZl6k9NWS5QPwD3NoAVz/eSgodQDvl+y+fu8MVbrHc=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "15f758a6b51e849ab5c20daec3ebd273cccb56d0",
+        "rev": "44f30edf5661d86fb3a95841c35127f3d0ea8b0f",
         "type": "github"
       },
       "original": {
-        "owner": "mrcjkb",
-        "ref": "luarocks-test-fix",
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
