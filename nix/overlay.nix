@@ -55,7 +55,7 @@ with final.lib; let
 
   neolua-nightly-wrapper = mkNeoluaWrapper "neolua-nightly" neovim-nightly;
 
-  luajit = prev.pkgs.luajit.overrideDerivation (old: {
+  luajit-override = prev.pkgs.luajit.overrideDerivation (old: {
     postPatch = ''
       ${old.postPatch}
       mkdir -p $out/bin
@@ -64,16 +64,13 @@ with final.lib; let
     '';
   });
 
-  luarocks = prev.pkgs.luajitPackages.luarocks.overrideDerivation (old: {
-    nativeBuildInputs = with final; [pkgs.makeWrapper pkgs.installShellFiles luajit pkgs.unzip];
-  });
+  luarocks = luajit-override.pkgs.luarocks;
 
   neorocks = final.pkgs.writeShellApplication {
     name = "luarocks";
     runtimeInputs = [
       luarocks
-      luajit
-      luajit.pkgs.dkjson
+      luajit-override
       neolua-stable-wrapper
       neolua-nightly-wrapper
     ];
