@@ -8,7 +8,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    # nixpkgs.url = "github:mrcjkb/nixpkgs/luarocks-test-fix";
 
     flake-compat = {
       url = "github:edolstra/flake-compat";
