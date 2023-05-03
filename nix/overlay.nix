@@ -64,9 +64,17 @@ with final.lib; let
     '';
   });
 
-  neorocks = prev.pkgs.luajitPackages.luarocks.overrideDerivation (old: {
+  luarocks = prev.pkgs.luajitPackages.luarocks.overrideDerivation (old: {
     nativeBuildInputs = with final; [pkgs.makeWrapper pkgs.installShellFiles luajit pkgs.unzip];
   });
+
+  neorocks = final.pkgs.symlinkJoin {
+    name = "neorocks";
+    paths = [
+      luarocks
+      luajit
+    ];
+  };
 in {
   inherit
     haskellPackages
