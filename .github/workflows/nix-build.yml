@@ -16,7 +16,6 @@ jobs:
     - run: nix flake check -L
 
   build:
-    needs: checks
     name: ${{ matrix.attribute }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -33,7 +32,6 @@ jobs:
     - run: nix build --accept-flake-config "${{matrix.attribute}}" -L
 
   tests:
-    needs: build
     runs-on: ubuntu-latest
     name: Integration test
     steps:
