@@ -73,6 +73,7 @@ with final.lib; let
     paths = [
       luarocks
       luajit
+      luajit.pkgs.dkjson
     ];
   };
 in {
