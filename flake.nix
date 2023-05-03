@@ -78,6 +78,7 @@
             cabal-install
             zlib
             haskellPackages.neolua-bin
+            neorocks
           ])
           ++ (with pre-commit-hooks.packages.${system}; [
             hlint

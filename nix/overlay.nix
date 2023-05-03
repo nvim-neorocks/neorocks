@@ -38,9 +38,9 @@ with final.lib; let
 
   neovim-nightly = neovim-input.packages.${prev.system}.neovim;
 
-  mkNeoluaWrapper = neovim:
+  mkNeoluaWrapper = name: neovim:
     final.pkgs.writeShellApplication {
-      name = "neolua";
+      inherit name;
       checkPhase = "";
       runtimeInputs = [
         haskellPackages.neolua-bin
@@ -51,16 +51,16 @@ with final.lib; let
       '';
     };
 
-  neolua-stable-wrapper = mkNeoluaWrapper final.pkgs.neovim-unwrapped;
+  neolua-stable-wrapper = mkNeoluaWrapper "neolua" final.pkgs.neovim-unwrapped;
 
-  neolua-nightly-wrapper = mkNeoluaWrapper neovim-nightly;
+  neolua-nightly-wrapper = mkNeoluaWrapper "neolua-nightly" neovim-nightly;
 
   luajit = prev.pkgs.luajit.overrideDerivation (old: {
     postPatch = ''
       ${old.postPatch}
       mkdir -p $out/bin
       ln -s ${neolua-stable-wrapper}/bin/neolua $out/bin/neolua
-      ln -s ${neolua-nightly-wrapper}/bin/neolua $out/bin/neolua-nightly
+      ln -s ${neolua-nightly-wrapper}/bin/neolua-nightly $out/bin/neolua-nightly
     '';
   });
 
@@ -74,6 +74,8 @@ with final.lib; let
       luarocks
       luajit
       luajit.pkgs.dkjson
+      neolua-stable-wrapper
+      neolua-nightly-wrapper
     ];
   };
 in {
