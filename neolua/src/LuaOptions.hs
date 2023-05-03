@@ -68,7 +68,10 @@ instance ToNvimOptions (Maybe LuaScriptOption) where
     "-l" : [script] <> (T.unpack <$> scriptArgs)
 
 getLuaOptions :: IO LuaOptions
-getLuaOptions = execParser $ info luaOptsParser fullDesc
+getLuaOptions =
+  customExecParser
+    (prefs showHelpOnError)
+    (info (luaOptsParser <**> helper) idm)
 
 showVersionInfo :: LuaOptions -> Bool
 showVersionInfo = optShowVersionInfo
