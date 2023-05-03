@@ -68,15 +68,19 @@ with final.lib; let
     nativeBuildInputs = with final; [pkgs.makeWrapper pkgs.installShellFiles luajit pkgs.unzip];
   });
 
-  neorocks = final.pkgs.symlinkJoin {
-    name = "neorocks";
-    paths = [
+  neorocks = final.pkgs.writeShellApplication {
+    name = "luarocks";
+    runtimeInputs = [
       luarocks
       luajit
       luajit.pkgs.dkjson
       neolua-stable-wrapper
       neolua-nightly-wrapper
     ];
+    checkPhase = "";
+    text = ''
+      luarocks "$@";
+    '';
   };
 in {
   inherit
