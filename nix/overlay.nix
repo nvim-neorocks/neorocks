@@ -1,11 +1,11 @@
 {neovim-input}: final: prev:
-with final.haskell.lib;
-with final.lib; let
+with prev.haskell.lib;
+with prev.lib; let
   haskellPackages = prev.haskellPackages.override (old: {
-    overrides = final.lib.composeExtensions (old.overrides or (_: _: {})) (
+    overrides = prev.lib.composeExtensions (old.overrides or (_: _: {})) (
       self: super: let
         neoluaPkg = buildFromSdist (
-          overrideCabal (self.callPackage ../neolua/default.nix {})
+          overrideCabal (super.callPackage ../neolua/default.nix {})
           (old: {
             configureFlags =
               (old.configureFlags or [])
@@ -29,7 +29,7 @@ with final.lib; let
               ];
           })
         );
-        neolua-bin = final.haskellPackages.generateOptparseApplicativeCompletions ["neolua"] neoluaPkg;
+        neolua-bin = prev.haskellPackages.generateOptparseApplicativeCompletions ["neolua"] neoluaPkg;
       in {
         inherit neolua-bin;
       }
@@ -39,7 +39,7 @@ with final.lib; let
   neovim-nightly = neovim-input.packages.${prev.system}.neovim;
 
   mkNeoluaWrapper = name: neovim:
-    final.pkgs.writeShellApplication {
+    prev.pkgs.writeShellApplication {
       inherit name;
       checkPhase = "";
       runtimeInputs = [
@@ -51,33 +51,26 @@ with final.lib; let
       '';
     };
 
-  neolua-stable-wrapper = mkNeoluaWrapper "neolua" final.pkgs.neovim-unwrapped;
+  neolua-stable-wrapper = mkNeoluaWrapper "neolua" prev.pkgs.neovim-unwrapped;
 
   neolua-nightly-wrapper = mkNeoluaWrapper "neolua-nightly" neovim-nightly;
 
   luajit-override = prev.pkgs.luajit.overrideDerivation (old: {
-    postPatch = ''
-      ${old.postPatch}
-      mkdir -p $out/bin
+    postInstall = ''
+      ${old.postInstall}
       ln -s ${neolua-stable-wrapper}/bin/neolua $out/bin/neolua
       ln -s ${neolua-nightly-wrapper}/bin/neolua-nightly $out/bin/neolua-nightly
     '';
   });
 
-  luarocks = luajit-override.pkgs.luarocks;
-
-  neorocks = final.pkgs.writeShellApplication {
-    name = "luarocks";
-    runtimeInputs = [
-      luarocks
+  neorocks = prev.pkgs.symlinkJoin {
+    name = "neorocks";
+    paths = [
       luajit-override
+      luajit-override.pkgs.luarocks
       neolua-stable-wrapper
       neolua-nightly-wrapper
     ];
-    checkPhase = "";
-    text = ''
-      luarocks "$@";
-    '';
   };
 in {
   inherit
