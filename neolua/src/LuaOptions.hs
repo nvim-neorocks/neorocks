@@ -28,8 +28,8 @@ data LuaOptions = LuaOptions
 
 instance ToNvimOptions LuaOptions where
   toNvimOptions LuaOptions{..} =
-    toNvimOptions optExec
-      <> toNvimOptions optRequireLibraries
+    toNvimOptions optRequireLibraries
+      <> toNvimOptions optExec
       <> toNvimOptions optRunScript
 
 newtype ExecOption = ExecOption
