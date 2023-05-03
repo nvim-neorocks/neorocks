@@ -6,7 +6,7 @@ return {
     verbose = true
   },
   tests = {
-    ROOT = {"tests"},
+    ROOT = {"spec"},
     verbose = true
   },
 }
