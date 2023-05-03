@@ -55,7 +55,7 @@ with prev.lib; let
 
   neolua-nightly-wrapper = mkNeoluaWrapper "neolua-nightly" neovim-nightly;
 
-  luajit-override =
+  luajit =
     (prev.pkgs.luajit.overrideAttrs (old: {
       postInstall = ''
         ${old.postInstall}
@@ -64,14 +64,14 @@ with prev.lib; let
       '';
     }))
     .override {
-      self = luajit-override;
+      self = luajit;
     };
 
   neorocks = prev.pkgs.symlinkJoin {
     name = "neorocks";
     paths = [
-      luajit-override
-      luajit-override.pkgs.luarocks
+      final.luajit
+      final.luajitPackages.luarocks
       neolua-stable-wrapper
       neolua-nightly-wrapper
     ];
@@ -81,4 +81,5 @@ in {
     haskellPackages
     neorocks
     ;
+  luajitPackages = luajit.pkgs;
 }
