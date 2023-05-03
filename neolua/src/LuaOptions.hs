@@ -38,8 +38,9 @@ newtype ExecOption = ExecOption
   deriving (Show, Eq)
 
 instance ToNvimOptions ExecOption where
+  toNvimOptions (ExecOption []) = []
   toNvimOptions ExecOption{..} =
-    mconcat $ fmap (\stat -> ["-c", "lua " <> T.unpack stat]) stats
+    ["-c", "lua " <> unwords (T.unpack <$> stats)]
 
 newtype RequireOption = RequireOption
   { modules :: [Text]
@@ -47,12 +48,13 @@ newtype RequireOption = RequireOption
   deriving (Show, Eq)
 
 instance ToNvimOptions RequireOption where
+  toNvimOptions (RequireOption []) = []
   toNvimOptions RequireOption{..} =
-    mconcat $ toNvimRequireModuleStr . T.unpack <$> modules
+    ["-c", "lua " <> unwords (toNvimRequireModuleStr . T.unpack <$> modules)]
     where
-      toNvimRequireModuleStr :: String -> [String]
-      toNvimRequireModuleStr ('g' : '=' : modName) = ["-c", "lua _G.require('" <> modName <> "')"]
-      toNvimRequireModuleStr modName = ["-c", "lua require('" <> modName <> "')"]
+      toNvimRequireModuleStr :: String -> String
+      toNvimRequireModuleStr ('g' : '=' : modName) = "_G.require(\"" <> modName <> "\");"
+      toNvimRequireModuleStr modName = "require(\"" <> modName <> "\");"
 
 data LuaScriptOption = LuaScriptOption
   { script :: FilePath
