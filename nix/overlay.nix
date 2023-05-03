@@ -55,13 +55,17 @@ with prev.lib; let
 
   neolua-nightly-wrapper = mkNeoluaWrapper "neolua-nightly" neovim-nightly;
 
-  luajit-override = prev.pkgs.luajit.overrideDerivation (old: {
-    postInstall = ''
-      ${old.postInstall}
-      ln -s ${neolua-stable-wrapper}/bin/neolua $out/bin/neolua
-      ln -s ${neolua-nightly-wrapper}/bin/neolua-nightly $out/bin/neolua-nightly
-    '';
-  });
+  luajit-override =
+    (prev.pkgs.luajit.overrideAttrs (old: {
+      postInstall = ''
+        ${old.postInstall}
+        ln -s ${neolua-stable-wrapper}/bin/neolua $out/bin/neolua
+        ln -s ${neolua-nightly-wrapper}/bin/neolua-nightly $out/bin/neolua-nightly
+      '';
+    }))
+    .override {
+      self = luajit-override;
+    };
 
   neorocks = prev.pkgs.symlinkJoin {
     name = "neorocks";
