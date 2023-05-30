@@ -2,8 +2,8 @@
   description = "Luarocks with Neovim as the Lua interpreter";
 
   nixConfig = {
-    extra-substituters = "https://mrcjkb.cachix.org";
-    extra-trusted-public-keys = "mrcjkb.cachix.org-1:KhpstvH5GfsuEFOSyGjSTjng8oDecEds7rbrI96tjA4=";
+    extra-substituters = "https://neorocks.cachix.org";
+    extra-trusted-public-keys = "neorocks.cachix.org-1:WqMESxmVTOJX7qoBC54TwrMMoVI1xAM+7yFin8NRfwk=";
   };
 
   inputs = {
