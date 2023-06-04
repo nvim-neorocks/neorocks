@@ -9,9 +9,14 @@
 [![Build Status][ci-shield]][ci-url]
 [![Hackage][hackage-shield]][hackage-url]
 
-`neorocks` is a [nix](https://nixos.org/) derivation
-that allows you to run [luarocks](https://luarocks.org/) with [Neovim](https://neovim.io/)
-(0.9 and nightly) as the Lua interpreter.
+## What?
+
+- `neorocks` is a [nix](https://nixos.org/) derivation
+  that allows you to run [luarocks](https://luarocks.org/) with [Neovim](https://neovim.io/)
+  (version 0.9 and nightly) as the Lua interpreter.
+- `neolua` is a CLI wrapper around Neovim,
+  which maps Lua's CLI arguments to Neovim's CLI arguments.
+  It is used by `neorocks`.
 
 ## Why?
 
@@ -37,9 +42,29 @@ luarocks config --scope project lua_interpreter neolua
 luarocks test
 ```
 
-### Without Nix
+### Without Nix (using `neolua`)
 
-- [ ] TODO: Write documentation on how to use this locally.
+- Install `lua 5.1` and `luarocks` with your distribution's package manager.
+- `neolua` is [available on Hackage](https://hackage.haskell.org/package/neolua-1.0.0).
+  You can install it using the `cabal-install` package from your
+  distributions package manager (if using Linux or Mac).
+- Make sure `neolua` is installed or symlinked into the same directory as `luarocks`
+  (e.g. `/usr/bin`).
+
+```console
+# In the root of your lua project:
+luarocks init
+# lua interpreters: lua, neolua [neovim 0.9] or neolua-nightly
+luarocks config --scope project lua_version 5.1
+# The path to luajit may vary depending on your system.
+luarocks config --scope project variables.LUA_INCDIR /usr/include/luajit-2.1
+luarocks config --scope project lua_interpreter neolua
+luarocks test
+```
+
+### Without `neolua`
+
+- [ ] TODO
 
 <!-- MARKDOWN LNIKS & IMAGES -->
 [neovim-shield]: https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white
