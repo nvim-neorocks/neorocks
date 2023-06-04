@@ -44,7 +44,7 @@ Neovim plugins with access to the Neovim Lua API.
 This was designed for use with the [luarocks-tag-release](https://github.com/nvim-neorocks/luarocks-tag-release)
 GitHub action.
 
-## Usage
+## How?
 
 - See the [`luarocks test`](https://github.com/luarocks/luarocks/wiki/test) documentation.
 - An example project can be found in the [`testproject`](./testproject) subdirectory.
