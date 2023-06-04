@@ -1,6 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 
-module NeoLua where
+module NeoLua (main) where
 
 import Control.Monad (when)
 import LuaOptions

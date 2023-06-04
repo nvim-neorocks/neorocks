@@ -18,6 +18,7 @@ import Options.Applicative
 class ToNvimOptions a where
   toNvimOptions :: a -> [String]
 
+-- | Lua cli options
 data LuaOptions = LuaOptions
   { optExec :: ExecOption
   , optRequireLibraries :: RequireOption
@@ -32,6 +33,7 @@ instance ToNvimOptions LuaOptions where
       <> toNvimOptions optExec
       <> toNvimOptions optRunScript
 
+-- | Lua strings to execute
 newtype ExecOption = ExecOption
   { stats :: [Text]
   }
@@ -42,6 +44,7 @@ instance ToNvimOptions ExecOption where
   toNvimOptions ExecOption{..} =
     ["-c", "lua " <> unwords (T.unpack <$> stats)]
 
+-- | Lua modules to require
 newtype RequireOption = RequireOption
   { modules :: [Text]
   }
@@ -56,6 +59,7 @@ instance ToNvimOptions RequireOption where
       toNvimRequireModuleStr ('g' : '=' : modName) = "_G.require(\"" <> modName <> "\");"
       toNvimRequireModuleStr modName = "require(\"" <> modName <> "\");"
 
+-- | Lua script to run
 data LuaScriptOption = LuaScriptOption
   { script :: FilePath
   , scriptArgs :: [Text]
@@ -67,12 +71,14 @@ instance ToNvimOptions (Maybe LuaScriptOption) where
   toNvimOptions (Just LuaScriptOption{..}) =
     "-l" : [script] <> (T.unpack <$> scriptArgs)
 
+-- | Get lua options from the command line arguments
 getLuaOptions :: IO LuaOptions
 getLuaOptions =
   customExecParser
     (prefs showHelpOnError)
     (info (luaOptsParser <**> helper) idm)
 
+-- | Should the interpreter's version info be shown?
 showVersionInfo :: LuaOptions -> Bool
 showVersionInfo = optShowVersionInfo
 
