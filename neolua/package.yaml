@@ -1,6 +1,6 @@
 name: neolua
-version: 0.1.0
-github: "mrcjkb/neorocks-nix"
+version: 1.0.0
+github: "nvim-neorocks/neorocks"
 license: GPL-2
 author: "Marc Jakobi"
 maintainer: "mrcjkb89@outlook.com"

@@ -5,11 +5,11 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           neolua
-version:        0.1.0
+version:        1.0.0
 synopsis:       A CLI adapter to map Lua's CLI to Neovim's CLI for lua interpretation.
 category:       CLI
-homepage:       https://github.com/mrcjkb/neorocks-nix#readme
-bug-reports:    https://github.com/mrcjkb/neorocks-nix/issues
+homepage:       https://github.com/nvim-neorocks/neorocks#readme
+bug-reports:    https://github.com/nvim-neorocks/neorocks/issues
 author:         Marc Jakobi
 maintainer:     mrcjkb89@outlook.com
 copyright:      Copyright (c) 2023 Marc Jakobi
@@ -18,7 +18,7 @@ build-type:     Simple
 
 source-repository head
   type: git
-  location: https://github.com/mrcjkb/neorocks-nix
+  location: https://github.com/nvim-neorocks/neorocks
 
 executable neolua
   main-is: NeoLua.hs
