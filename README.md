@@ -104,6 +104,12 @@ nvim \
   add them to your project's rockspec.
 - See also the example project in the [`testproject`](./testproject) subdirectory.
 
+> **Note**
+>
+> If your tests are not in a `spec` directory,
+> pass the name of the test directory to the script.
+> e.g., `./run-tests.sh tests`
+
 ### With GitHub Actions
 
 - We recommend using the [luarocks-tag-release](https://github.com/nvim-neorocks/luarocks-tag-release)
