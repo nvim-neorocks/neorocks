@@ -48,6 +48,8 @@ GitHub action.
 
 - See the [`luarocks test`](https://github.com/luarocks/luarocks/wiki/test) documentation.
 - An example project can be found in the [`testproject`](./testproject) subdirectory.
+- Neovim plugins should have a [`rockspec`](./testproject/testproject-scm-1.rockspec)
+  and a [`.busted`](./testproject/.busted) file in the project root.
 
 ### With Nix
 
@@ -95,7 +97,7 @@ luarocks init
 luarocks install busted 2.1.2-3
 luarocks config --scope project lua_version 5.1
 nvim \
-  -c 'lua package.path="./lua/?.lua;./lua/?/?.lua;./lua/?/init.lua;lua_modules/share/lua/5.1/?.lua;lua_modules/share/lua/5.1/?/init.lua;"..package.path;package.cpath="lua_modules/lib/lua/5.1/?.so;"..package.cpath;local k,l,_=pcall(require,"luarocks.loader") _=k and l.add_context("busted","2.1.2-3")' \
+  -c 'lua package.path="lua_modules/share/lua/5.1/?.lua;lua_modules/share/lua/5.1/?/init.lua;"..package.path;package.cpath="lua_modules/lib/lua/5.1/?.so;"..package.cpath;local k,l,_=pcall(require,"luarocks.loader") _=k and l.add_context("busted","2.1.2-3")' \
   -l 'lua_modules/lib/luarocks/rocks-5.1/busted/2.1.2-3/bin/busted' "$@"
 ```
 <!-- markdownlint-restore -->
