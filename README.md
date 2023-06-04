@@ -48,6 +48,8 @@ GitHub action.
 
 - See the [`luarocks test`](https://github.com/luarocks/luarocks/wiki/test) documentation.
 - An example project can be found in the [`testproject`](./testproject) subdirectory.
+- Neovim plugins should have a [`rockspec`](./testproject/testproject-scm-1.rockspec)
+  and a [`.busted`](./testproject/.busted) file in the project root.
 
 ### With Nix
 
@@ -103,6 +105,12 @@ nvim \
 - If your project depends on other luarocks packages,
   add them to your project's rockspec.
 - See also the example project in the [`testproject`](./testproject) subdirectory.
+
+> **Note**
+>
+> If your tests are not in a `spec` directory,
+> pass the name of the test directory to the script.
+> e.g., `./run-tests.sh tests`
 
 ### With GitHub Actions
 
