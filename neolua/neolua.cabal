@@ -7,6 +7,7 @@ cabal-version: 1.12
 name:           neolua
 version:        1.0.0
 synopsis:       A CLI adapter to map Lua's CLI to Neovim's CLI for lua interpretation.
+description:    A CLI adapter to map Lua's CLI to Neovim's CLI for lua interpretation. For use with luarocks test.
 category:       CLI
 homepage:       https://github.com/nvim-neorocks/neorocks#readme
 bug-reports:    https://github.com/nvim-neorocks/neorocks/issues
@@ -14,7 +15,11 @@ author:         Marc Jakobi
 maintainer:     mrcjkb89@outlook.com
 copyright:      Copyright (c) 2023 Marc Jakobi
 license:        GPL-2
+license-file:   LICENSE
 build-type:     Simple
+extra-source-files:
+    CHANGELOG.md
+    LICENSE
 
 source-repository head
   type: git
