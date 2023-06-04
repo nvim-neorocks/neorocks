@@ -1,5 +1,14 @@
 # neorocks
 
+[![Neovim][neovim-shield]][neovim-url]
+[![Lua][lua-shield]][lua-url]
+[![Nix][nix-shield]][nix-url]
+
+[![GPL2 License][license-shield]][license-url]
+[![Issues][issues-shield]][issues-url]
+[![Build Status][ci-shield]][ci-url]
+[![Hackage][hackage-shield]][hackage-url]
+
 `neorocks` is a [nix](https://nixos.org/) derivation
 that allows you to run [luarocks](https://luarocks.org/) with [Neovim](https://neovim.io/)
 (0.9 and nightly) as the Lua interpreter.
@@ -31,3 +40,19 @@ luarocks test
 ### Without Nix
 
 - [ ] TODO: Write documentation on how to use this locally.
+
+<!-- MARKDOWN LNIKS & IMAGES -->
+[neovim-shield]: https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white
+[neovim-url]: https://neovim.io/
+[lua-shield]: https://img.shields.io/badge/lua-%232C2D72.svg?style=for-the-badge&logo=lua&logoColor=white
+[lua-url]: https://www.lua.org/
+[nix-shield]: https://img.shields.io/badge/nix-0175C2?style=for-the-badge&logo=NixOS&logoColor=white
+[nix-url]: https://nixos.org/
+[issues-shield]: https://img.shields.io/github/issues/nvim-neorocks/neorocks.svg?style=for-the-badge
+[issues-url]: https://github.com/nvim-neorocks/neorocks/issues
+[license-shield]: https://img.shields.io/github/license/nvim-neorocks/neorocks.svg?style=for-the-badge
+[license-url]: https://github.com/nvim-neorocks/neorocks/blob/master/LICENSE
+[ci-shield]: https://img.shields.io/github/actions/workflow/status/nvim-neorocks/neorocks/nix-build.yml?style=for-the-badge
+[ci-url]: https://github.com/nvim-neorocks/neorocks/actions/workflows/nix-build.yml
+[hackage-shield]: https://img.shields.io/hackage/v/neolua.svg?style=for-the-badge
+[hackage-url]: https://hackage.haskell.org/package/neolua
