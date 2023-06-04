@@ -20,17 +20,4 @@ executables:
         - text
         - process
       ghc-options:
-        - -Wall
-        - -Werror
-        - -Wincomplete-uni-patterns
-        - -Wincomplete-record-updates
-        - -Wpartial-fields
-        - -Widentities
-        - -Wredundant-constraints
-        - -Wcpp-undef
-        - -Wunused-packages
-        - -Wno-deprecations
-        - -O2
-        - -j
-        - +RTS -A256m -n4m -RTS
         - -main-is NeoLua
