@@ -88,15 +88,6 @@ To run tests locally, without `neorocks` or `neolua`...
 - Add `luarocks`, `lua_modules` and `.luarocks` to your project's `.gitignore`.
 - Add the following shell script to your project:
 
-### With GitHub Actions
-
-- We recommend using the [luarocks-tag-release](https://github.com/nvim-neorocks/luarocks-tag-release)
-  action, which uses `neorocks` to run tests and publishes your package
-  to luarocks.
-- Alternatively, you can see the `tests` job of
-  [this project's CI](./.github/workflows/nix-build.yml)
-  for an example on how to use `neorocks` with GitHub actions manually.
-
 <!-- markdownlint-disable -->
 ```sh
 #!/bin/sh
@@ -110,6 +101,15 @@ nvim -c 'lua package.path="lua_modules/share/lua/5.1/?.lua;lua_modules/share/lua
 - If your project depends on other luarocks packages,
   add them to your project's rockspec.
 - See also the example project in the [`testproject`](./testproject) subdirectory.
+
+### With GitHub Actions
+
+- We recommend using the [luarocks-tag-release](https://github.com/nvim-neorocks/luarocks-tag-release)
+  action, which uses `neorocks` to run tests and publishes your package
+  to luarocks.
+- Alternatively, you can see the `tests` job of
+  [this project's CI](./.github/workflows/nix-build.yml)
+  for an example on how to use `neorocks` with GitHub actions manually.
 
 <!-- MARKDOWN LNIKS & IMAGES -->
 [neovim-shield]: https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white
