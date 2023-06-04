@@ -1,4 +1,22 @@
-# neorocks
+<!-- markdownlint-disable -->
+<br />
+<div align="center">
+  <a href="https://github.com/nvim-neorocks/neorocks">
+    <img src="https://avatars.githubusercontent.com/u/124081866?s=400&u=0da379a468d46456477a1f68048b020cf7a99f34&v=4" alt="neorocks">
+  </a>
+  <p align="center">
+    <a href="https://github.com/nvim-neorocks/neorocks/issues">Report Bug</a>
+  </p>
+  <p>
+    <strong>
+      neorocks
+      <br />
+      Run <a href="https://lunarmodules.github.io/busted/">busted</a> tests with <a href="https://neovim.io/">Neovim</a>.
+    </strong>
+  </p>
+  <h2>🌒</h>
+</div>
+<!-- markdownlint-restore -->
 
 [![Neovim][neovim-shield]][neovim-url]
 [![Lua][lua-shield]][lua-url]
