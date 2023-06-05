@@ -3,7 +3,7 @@ rockspec_format = '3.0'
 package = 'testproject'
 version = _MODREV .. _SPECREV
 
-dependencies = {
+test_dependencies = {
   'lua >= 5.1',
   'plenary.nvim',
 }
