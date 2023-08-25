@@ -67,19 +67,58 @@ with prev.lib; let
       self = luajit;
     };
 
-  neorocks = prev.pkgs.symlinkJoin {
-    name = "neorocks";
-    paths = [
-      final.luajit
-      final.luajitPackages.luarocks
-      neolua-stable-wrapper
-      neolua-nightly-wrapper
-    ];
-  };
+  mkNeorocks = neolua-pkgs:
+    prev.pkgs.symlinkJoin {
+      name = "neorocks";
+      paths =
+        [
+          final.luajit
+          final.luajitPackages.luarocks
+        ]
+        ++ neolua-pkgs;
+    };
+
+  neorocks = mkNeorocks [
+    neolua-stable-wrapper
+    neolua-nightly-wrapper
+  ];
+
+  neorocksTest = {
+    src,
+    name,
+    neovim ? neovim-nightly,
+    version ? "scm-1",
+    luaPackages ? [], # e.g. p: with p; [plenary.nvim]
+    extraPackages ? [], # Extra dependencies
+  }: let
+    neolua-wrapper = mkNeoluaWrapper "neolua" neovim;
+
+    luajit = prev.pkgs.luajit;
+
+    busted = luajit.pkgs.busted.overrideAttrs (oa: {
+      postInstall = ''
+        ${oa.postInstall}
+        substituteInPlace ''$out/bin/busted \
+          --replace "${luajit}/bin/luajit" "${neolua-wrapper}/bin/neolua"
+      '';
+    });
+  in (luajit.pkgs.buildLuarocksPackage {
+    inherit src version;
+    pname = name;
+    propagatedBuildInputs =
+      [
+        busted
+      ]
+      ++ luaPackages luajit.pkgs;
+    doCheck = true;
+    nativeCheckInputs = extraPackages;
+  });
 in {
   inherit
     haskellPackages
     neorocks
+    neorocksTest
+    neovim-nightly
     ;
   luajitPackages = luajit.pkgs;
 }
