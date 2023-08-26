@@ -30,18 +30,20 @@
 ## What?
 
 - `neorocks` is a [nix](https://nixos.org/) derivation
-  that allows you to run [luarocks](https://luarocks.org/) with [Neovim](https://neovim.io/)
-  (version 0.9 and nightly) as the Lua interpreter.
+  that allows you to run [`luarocks test`](https://github.com/luarocks/luarocks/wiki/test)
+  with [Neovim](https://neovim.io/) as the Lua interpreter.
 - `neolua` is a CLI wrapper around Neovim,
   which maps Lua's CLI arguments to Neovim's CLI arguments.
   It is used by `neorocks`.
+- This project's README provides tuturial for using [`busted`](https://lunarmodules.github.io/busted/)
+  to test Neovim plugins (with and without Nix).
 
 ## Why?
 
-So you can use [busted](https://lunarmodules.github.io/busted/) to test your
+So you can use [`busted`](https://lunarmodules.github.io/busted/) to test your
 Neovim plugins with access to the Neovim Lua API.
 
-This was designed for use with the [luarocks-tag-release](https://github.com/nvim-neorocks/luarocks-tag-release)
+This was designed for use with the [`luarocks-tag-release`](https://github.com/nvim-neorocks/luarocks-tag-release)
 GitHub action.
 
 ## How?
@@ -118,17 +120,15 @@ luarocks test
 ```console
 # In the root of your lua project:
 luarocks init
-# lua interpreters: lua, neolua [neovim 0.9] or neolua-nightly
 luarocks config --scope project lua_version 5.1
-# The path to luajit may vary depending on your system.
-luarocks config --scope project variables.LUA_INCDIR /usr/include/luajit-2.1
+# lua interpreters: lua, neolua [neovim 0.9] or neolua-nightly
 luarocks config --scope project lua_interpreter neolua
 luarocks test
 ```
 
 ### Without `neolua`
 
-To run tests locally, without `neorocks` or `neolua`...
+To run `busted` tests locally, without `neorocks` or `neolua`...
 
 - Install `lua 5.1` and `luarocks` with your distribution's package manager.
 - Add `luarocks`, `lua_modules` and `.luarocks` to your project's `.gitignore`.
@@ -148,7 +148,7 @@ nvim -u NONE \
 <!-- markdownlint-restore -->
 
 - If your project depends on other luarocks packages,
-  add them to your project's rockspec.
+  add them to the `dependencies` and `test_dependencies` in your project's rockspec.
 - See also the example project in the [`testproject`](./testproject) subdirectory.
 
 > **Note**
@@ -161,7 +161,7 @@ nvim -u NONE \
 
 - We recommend using the [luarocks-tag-release](https://github.com/nvim-neorocks/luarocks-tag-release)
   action, which uses `neorocks` to run tests and publishes your package
-  to luarocks.
+  to luarocks, or to use the `neorocksTest` helper in a nix-based CI.
 - Alternatively, you can see the `tests` job of
   [this project's CI](./.github/workflows/nix-build.yml)
   for an example on how to use `neorocks` with GitHub actions manually.
