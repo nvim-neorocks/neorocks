@@ -51,7 +51,51 @@ GitHub action.
 - Neovim plugins should have a [`rockspec`](./testproject/testproject-scm-1.rockspec)
   and a [`.busted`](./testproject/.busted) file in the project root.
 
-### With Nix
+### In a Nix flake
+
+This project provides a Nix overlay with a `neorocksTest` function.
+Here is an example of how to use it in a Nix flake:
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    neorocks.url = "github:nvim-neorocks/neorocks";
+  };
+  outputs = {
+    self,
+    nixpkgs,
+    neorocks,
+    ...
+  }: let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs {
+      inherit system;
+      overlays = [
+        neorocks.overlays.default
+      ];
+    };
+  in {
+    # ...
+    checks.${system} = {
+      neorocks-test = neorocksText {
+        src = self; # Project containing the rockspec and .busted files.
+        name = "my-plugin.nvim";
+        version = "scm-1"; # Optional, defaults to "scm-1";
+        neovim = pkgs.neovim-nightly; # Optional, defaults to neovim-nightly.
+        luaPackages = ps: # Optional
+          with ps; [
+            # LuaRocks dependencies must be added here.
+            plenary-nvim
+          ];
+        extraPackages = []; # Optional. External test runtime dependencies.
+      };
+    };
+  };
+}
+```
+
+### In a Nix shell
 
 ```console
 nix shell "github:nvim-neorocks/neorocks"
