@@ -85,6 +85,7 @@
             fourmolu
             cabal2nix
             alejandra
+            markdownlint-cli
           ]);
         shellHook = ''
           ${self.checks.${system}.pre-commit-check.shellHook}
