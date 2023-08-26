@@ -88,7 +88,7 @@ with prev.lib; let
     name,
     neovim ? neovim-nightly,
     version ? "scm-1",
-    luaPackages ? [], # e.g. p: with p; [plenary.nvim]
+    luaPackages ? _: [], # e.g. p: with p; [plenary.nvim]
     extraPackages ? [], # Extra dependencies
   }: let
     neolua-wrapper = mkNeoluaWrapper "neolua" neovim;
