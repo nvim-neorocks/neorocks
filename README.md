@@ -78,7 +78,7 @@ Here is an example of how to use it in a Nix flake:
   in {
     # ...
     checks.${system} = {
-      neorocks-test = neorocksText {
+      neorocks-test = pkgs.neorocksText {
         src = self; # Project containing the rockspec and .busted files.
         name = "my-plugin.nvim";
         version = "scm-1"; # Optional, defaults to "scm-1";
