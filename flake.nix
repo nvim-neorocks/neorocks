@@ -107,7 +107,8 @@
         inherit pre-commit-check;
         neorocks-test = pkgs.neorocksTest {
           src = ./testproject;
-          name = "testproject";
+          name = "neorocks-test";
+          pname = "testproject";
           neovim = pkgs.neovim-nightly;
           luaPackages = ps:
             with ps; [

@@ -86,6 +86,7 @@ with prev.lib; let
   neorocksTest = {
     src,
     name,
+    pname ? name, # The plugin/luarocks package name
     neovim ? neovim-nightly,
     version ? "scm-1",
     luaPackages ? _: [], # e.g. p: with p; [plenary.nvim]
@@ -103,8 +104,11 @@ with prev.lib; let
       '';
     });
   in (luajit.pkgs.buildLuarocksPackage {
-    inherit src version;
-    pname = name;
+    inherit src version pname;
+    namePrefix =
+      if name == pname
+      then ""
+      else "${name}-";
     propagatedBuildInputs =
       [
         busted
