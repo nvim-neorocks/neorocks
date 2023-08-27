@@ -25,6 +25,7 @@ jobs:
           - ubuntu-latest
         attribute:
           - .#neorocks
+          - .#neovim-nightly
           - .#devShells.x86_64-linux.default
     steps:
     - uses: actions/checkout@v3

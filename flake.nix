@@ -101,6 +101,7 @@
         default = neorocks;
         neorocks = pkgs.neorocks;
         neolua-bin = pkgs.haskellPackages.neolua-bin;
+        neovim-nightly = pkgs.neovim-nightly;
       };
 
       checks = {
