@@ -101,13 +101,15 @@
         default = neorocks;
         neorocks = pkgs.neorocks;
         neolua-bin = pkgs.haskellPackages.neolua-bin;
+        neovim-nightly = pkgs.neovim-nightly;
       };
 
       checks = {
         inherit pre-commit-check;
         neorocks-test = pkgs.neorocksTest {
           src = ./testproject;
-          name = "testproject";
+          name = "neorocks-test";
+          pname = "testproject";
           neovim = pkgs.neovim-nightly;
           luaPackages = ps:
             with ps; [

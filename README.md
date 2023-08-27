@@ -82,7 +82,9 @@ Here is an example of how to use it in a Nix flake:
     checks.${system} = {
       neorocks-test = pkgs.neorocksText {
         src = self; # Project containing the rockspec and .busted files.
-        name = "my-plugin.nvim";
+        # Plugin name. If running multiple tests,
+        # you can use pname for the plugin name instead
+        name = "my-plugin.nvim"
         version = "scm-1"; # Optional, defaults to "scm-1";
         neovim = pkgs.neovim-nightly; # Optional, defaults to neovim-nightly.
         luaPackages = ps: # Optional

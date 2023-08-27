@@ -86,11 +86,23 @@ with prev.lib; let
   neorocksTest = {
     src,
     name,
+    pname ? name, # The plugin/luarocks package name
     neovim ? neovim-nightly,
     version ? "scm-1",
     luaPackages ? _: [], # e.g. p: with p; [plenary.nvim]
     extraPackages ? [], # Extra dependencies
-  }: let
+    ...
+  } @ attrs: let
+    # This allows us to pass in extra attrs to buildLuarocksPackage
+    rest = builtins.removeAttrs attrs [
+      "src"
+      "name"
+      "pname"
+      "neovim"
+      "version"
+      "luaPackages"
+      "extraPackages"
+    ];
     neolua-wrapper = mkNeoluaWrapper "neolua" neovim;
 
     luajit = prev.pkgs.luajit;
@@ -102,17 +114,25 @@ with prev.lib; let
           --replace "${luajit}/bin/luajit" "${neolua-wrapper}/bin/neolua"
       '';
     });
-  in (luajit.pkgs.buildLuarocksPackage {
-    inherit src version;
-    pname = name;
-    propagatedBuildInputs =
-      [
-        busted
-      ]
-      ++ luaPackages luajit.pkgs;
-    doCheck = true;
-    nativeCheckInputs = extraPackages;
-  });
+  in (luajit.pkgs.buildLuarocksPackage (rest
+    // {
+      inherit
+        src
+        version
+        pname
+        ;
+      namePrefix =
+        if name == pname
+        then ""
+        else "${name}-";
+      propagatedBuildInputs =
+        [
+          busted
+        ]
+        ++ luaPackages luajit.pkgs;
+      doCheck = true;
+      nativeCheckInputs = extraPackages;
+    }));
 in {
   inherit
     haskellPackages
