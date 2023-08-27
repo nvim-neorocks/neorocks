@@ -85,6 +85,7 @@
             fourmolu
             cabal2nix
             alejandra
+            markdownlint-cli
           ]);
         shellHook = ''
           ${self.checks.${system}.pre-commit-check.shellHook}
@@ -104,6 +105,15 @@
 
       checks = {
         inherit pre-commit-check;
+        neorocks-test = pkgs.neorocksTest {
+          src = ./testproject;
+          name = "testproject";
+          neovim = pkgs.neovim-nightly;
+          luaPackages = ps:
+            with ps; [
+              plenary-nvim
+            ];
+        };
       };
     })
     // {
