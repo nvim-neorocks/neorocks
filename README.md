@@ -80,7 +80,7 @@ Here is an example of how to use it in a Nix flake:
   in {
     # ...
     checks.${system} = {
-      neorocks-test = pkgs.neorocksText {
+      neorocks-test = pkgs.neorocksTest {
         src = self; # Project containing the rockspec and .busted files.
         # Plugin name. If running multiple tests,
         # you can use pname for the plugin name instead
