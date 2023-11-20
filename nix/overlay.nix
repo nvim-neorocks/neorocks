@@ -139,6 +139,8 @@ in {
     neorocks
     neorocksTest
     neovim-nightly
+    neolua-stable-wrapper
+    neolua-nightly-wrapper
     ;
   luajitPackages = luajit.pkgs;
 }

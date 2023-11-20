@@ -102,6 +102,8 @@
         neorocks = pkgs.neorocks;
         neolua-bin = pkgs.haskellPackages.neolua-bin;
         neovim-nightly = pkgs.neovim-nightly;
+        neolua-stable-wrapper = pkgs.neolua-stable-wrapper;
+        neolua-nightly-wrapper = pkgs.neolua-nightly-wrapper;
       };
 
       checks = {
