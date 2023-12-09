@@ -55,8 +55,8 @@ with prev.lib; let
 
   neolua-nightly-wrapper = mkNeoluaWrapper "neolua-nightly" neovim-nightly;
 
-  luajit =
-    (prev.pkgs.luajit.overrideAttrs (old: {
+  lua5_1 =
+    (prev.pkgs.lua5_1.overrideAttrs (old: {
       postInstall = ''
         ${old.postInstall}
         ln -s ${neolua-stable-wrapper}/bin/neolua $out/bin/neolua
@@ -64,7 +64,7 @@ with prev.lib; let
       '';
     }))
     .override {
-      self = luajit;
+      self = lua5_1;
     };
 
   mkNeorocks = neolua-pkgs:
@@ -72,8 +72,8 @@ with prev.lib; let
       name = "neorocks";
       paths =
         [
-          final.luajit
-          final.luajitPackages.luarocks
+          final.lua5_1
+          final.lua51Packages.luarocks
         ]
         ++ neolua-pkgs;
     };
@@ -105,16 +105,16 @@ with prev.lib; let
     ];
     neolua-wrapper = mkNeoluaWrapper "neolua" neovim;
 
-    luajit = prev.pkgs.luajit;
+    lua5_1 = prev.pkgs.lua5_1;
 
-    busted = luajit.pkgs.busted.overrideAttrs (oa: {
+    busted = lua5_1.pkgs.busted.overrideAttrs (oa: {
       postInstall = ''
         ${oa.postInstall}
         substituteInPlace ''$out/bin/busted \
-          --replace "${luajit}/bin/luajit" "${neolua-wrapper}/bin/neolua"
+          --replace "${lua5_1}/bin/lua" "${neolua-wrapper}/bin/neolua"
       '';
     });
-  in (luajit.pkgs.buildLuarocksPackage (rest
+  in (lua5_1.pkgs.buildLuarocksPackage (rest
     // {
       inherit
         src
@@ -129,7 +129,7 @@ with prev.lib; let
         [
           busted
         ]
-        ++ luaPackages luajit.pkgs;
+        ++ luaPackages lua5_1.pkgs;
       doCheck = true;
       nativeCheckInputs = extraPackages;
     }));
@@ -142,5 +142,5 @@ in {
     neolua-stable-wrapper
     neolua-nightly-wrapper
     ;
-  luajitPackages = luajit.pkgs;
+  lua51Packages = lua5_1.pkgs;
 }
