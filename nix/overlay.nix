@@ -76,9 +76,21 @@ with prev.lib; let
       '';
     });
 
-  busted-stable = mkBustedWrapper neolua-stable-wrapper;
+  busted-stable = prev.pgks.symlinkJoin {
+    name = "busted-stable";
+    paths = [
+      (mkBustedWrapper neolua-stable-wrapper)
+      neolua-stable-wrapper
+    ];
+  };
 
-  busted-nightly = mkBustedWrapper neolua-nightly-wrapper;
+  busted-nightly = prev.pgks.symlinkJoin {
+    name = "busted-nightly";
+    paths = [
+      (mkBustedWrapper neolua-nightly-wrapper)
+      neolua-nightly-wrapper
+    ];
+  };
 
   mkNeorocks = neolua-pkgs:
     prev.pkgs.symlinkJoin {
