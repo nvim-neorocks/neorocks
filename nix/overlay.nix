@@ -78,7 +78,7 @@ with prev.lib; let
 
   busted-stable = mkBustedWrapper neolua-stable-wrapper "neolua-stable";
 
-  busted-nightly = mkBustedWrapper neolua-nightly-wrapper "neolua-nighly";
+  busted-nightly = mkBustedWrapper neolua-nightly-wrapper "neolua-nightly";
 
   mkNeorocks = neolua-pkgs:
     prev.pkgs.symlinkJoin {
