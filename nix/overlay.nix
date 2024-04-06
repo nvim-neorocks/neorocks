@@ -67,6 +67,19 @@ with prev.lib; let
       self = lua5_1;
     };
 
+  mkBustedWrapper = neolua-wrapper:
+    prev.lua5_1.pkgs.busted.overrideAttrs (oa: {
+      postInstall = ''
+        ${oa.postInstall}
+        substituteInPlace ''$out/bin/busted \
+          --replace "${lua5_1}/bin/lua" "${neolua-wrapper}/bin/neolua"
+      '';
+    });
+
+  busted-stable = mkBustedWrapper neolua-stable-wrapper;
+
+  busted-nightly = mkBustedWrapper neolua-nightly-wrapper;
+
   mkNeorocks = neolua-pkgs:
     prev.pkgs.symlinkJoin {
       name = "neorocks";
@@ -104,16 +117,8 @@ with prev.lib; let
       "extraPackages"
     ];
     neolua-wrapper = mkNeoluaWrapper "neolua" neovim;
-
+    busted = mkBustedWrapper neolua-wrapper;
     lua5_1 = prev.pkgs.lua5_1;
-
-    busted = lua5_1.pkgs.busted.overrideAttrs (oa: {
-      postInstall = ''
-        ${oa.postInstall}
-        substituteInPlace ''$out/bin/busted \
-          --replace "${lua5_1}/bin/lua" "${neolua-wrapper}/bin/neolua"
-      '';
-    });
   in (lua5_1.pkgs.buildLuarocksPackage (rest
     // {
       inherit
@@ -141,6 +146,8 @@ in {
     neovim-nightly
     neolua-stable-wrapper
     neolua-nightly-wrapper
+    busted-stable
+    busted-nightly
     ;
   lua51Packages = lua5_1.pkgs;
 }
