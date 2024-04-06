@@ -72,7 +72,7 @@ with prev.lib; let
       postInstall = ''
         ${oa.postInstall}
         substituteInPlace ''$out/bin/busted \
-          --replace "${lua5_1}/bin/lua" "${neolua-wrapper}/bin/neolua"
+          --replace "${prev.lua5_1}/bin/lua" "${neolua-wrapper}/bin/neolua"
       '';
     });
 
