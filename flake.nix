@@ -91,10 +91,19 @@
           ${self.checks.${system}.pre-commit-check.shellHook}
         '';
       };
+
+      neorocksShell = pkgs.mkShell {
+        name = "neorocks-shell";
+        buildInputs = with pkgs; [
+          neorocks
+          neolua-stable-wrapper
+          neolua-nightly-wrapper
+        ];
+      };
     in {
       devShells = {
         default = neoluaShell;
-        inherit neoluaShell;
+        inherit neoluaShell neorocksShell;
       };
 
       packages = rec {
