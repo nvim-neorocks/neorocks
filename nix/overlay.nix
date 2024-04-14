@@ -76,7 +76,7 @@ with prev.lib; let
       '';
     });
 
-  busted-stable = mkBustedWrapper neolua-stable-wrapper "neolua-stable";
+  busted-stable = mkBustedWrapper neolua-stable-wrapper "neolua";
 
   busted-nightly = mkBustedWrapper neolua-nightly-wrapper "neolua-nightly";
 

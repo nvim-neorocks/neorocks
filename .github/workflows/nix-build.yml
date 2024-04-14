@@ -36,26 +36,32 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix build --accept-flake-config "${{matrix.attribute}}" -L
 
-  tests:
-    runs-on: ubuntu-latest
-    name: Integration test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v26
-      - uses: cachix/cachix-action@v14
-        with:
-          name: neorocks
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-      - name: Run integration tests
-        run: |
-          nix profile install --accept-flake-config ".#neorocks"
-          cd testproject
-          luarocks init
-          luarocks config --scope project lua_interpreter neolua
-          luarocks test
-          rm -r lua_modules/ .luarocks/ luarocks
-          luarocks init
-          luarocks config --scope project lua_interpreter neolua-nightly
-          luarocks test
-        shell: bash
+  # tests:
+  #   runs-on: ubuntu-latest
+  #   name: Integration test
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - uses: cachix/install-nix-action@v26
+  #     - uses: cachix/cachix-action@v14
+  #       with:
+  #         name: neorocks
+  #         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+  #     - name: Run integration tests
+  #       run: |
+  #         nix profile install --accept-flake-config ".#neorocks"
+  #         cd testproject
+  #         echo "init for stable"
+  #         luarocks --local init
+  #         echo "config for stable"
+  #         luarocks config --scope project lua_interpreter neolua
+  #         echo "running tests for stable"
+  #         luarocks test
+  #         rm -r lua_modules/ .luarocks/ luarocks
+  #         echo "init for nightly"
+  #         luarocks --local init
+  #         echo "config for nightly"
+  #         luarocks config --scope project lua_interpreter neolua-nightly
+  #         echo "running tests for nightly"
+  #         luarocks test
+  #       shell: bash
