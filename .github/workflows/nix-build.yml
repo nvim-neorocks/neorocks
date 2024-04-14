@@ -49,7 +49,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Run integration tests
         run: |
-          nix develop --accept-flake-config ".#neorocksShell"
+          nix profile install --accept-flake-config ".#neorocks"
           cd testproject
           luarocks config local_by_default true
           luarocks init
