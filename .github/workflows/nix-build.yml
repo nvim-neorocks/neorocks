@@ -54,9 +54,11 @@ jobs:
           luarocks config local_by_default true
           luarocks init
           luarocks config --scope project lua_interpreter neolua
+          luarocks config --local lua_interpreter neolua
           luarocks test
           rm -r lua_modules/ .luarocks/ luarocks
           luarocks init
+          luarocks config --local lua_interpreter neolua-nightly
           luarocks config --scope project lua_interpreter neolua-nightly
           luarocks test
         shell: bash
