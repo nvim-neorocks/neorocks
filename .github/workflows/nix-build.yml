@@ -53,7 +53,7 @@ jobs:
           cd testproject
           luarocks config local_by_default true
           luarocks init
-          luarocks config --scope project lua_interpreter neolua-stable
+          luarocks config --scope project lua_interpreter neolua
           luarocks test
           rm -r lua_modules/ .luarocks/ luarocks
           luarocks init
