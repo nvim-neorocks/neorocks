@@ -52,14 +52,14 @@ jobs:
           nix profile install --accept-flake-config ".#neorocks"
           cd testproject
           echo "init for stable"
-          luarocks init
+          luarocks --local init
           echo "config for stable"
           luarocks config --scope project lua_interpreter neolua
           echo "running tests for stable"
           luarocks test
           rm -r lua_modules/ .luarocks/ luarocks
           echo "init for nightly"
-          luarocks init
+          luarocks --local init
           echo "config for nightly"
           luarocks config --scope project lua_interpreter neolua-nightly
           echo "running tests for nightly"
