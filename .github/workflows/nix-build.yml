@@ -56,12 +56,12 @@ jobs:
           echo "config for stable"
           luarocks config --scope project lua_interpreter neolua
           echo "running tests for stable"
-          LUAROCKS_CONFIG=".luarocks/config-5.1.lua" luarocks test
+          luarocks test
           rm -r lua_modules/ .luarocks/ luarocks
           echo "init for nightly"
           luarocks --local init
           echo "config for nightly"
           luarocks config --scope project lua_interpreter neolua-nightly
           echo "running tests for nightly"
-          LUAROCKS_CONFIG=".luarocks/config-5.1.lua" luarocks test
+          luarocks test
         shell: bash
