@@ -55,15 +55,17 @@
         src = self;
         hooks = {
           cabal2nix.enable = true;
-          alejandra.enable = true;
+          alejandra = {
+            enable = true;
+            excludes = [
+              "neolua/default.nix"
+            ];
+          };
           editorconfig-checker.enable = true;
           markdownlint.enable = true;
           fourmolu.enable = true;
           hpack.enable = true;
           hlint.enable = true;
-        };
-        settings = {
-          alejandra.exclude = ["neolua/default.nix"];
         };
       };
 
