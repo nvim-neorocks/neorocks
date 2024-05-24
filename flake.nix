@@ -89,6 +89,8 @@
         RT_DIR = pkgs.lib.makeLibraryPath [pkgs.glibc];
         shellHook = ''
           ${self.checks.${system}.pre-commit-check.shellHook}
+          echo "You may need to pass RT_DIR to luarocks test"
+          echo "RT_DIR=$RT_DIR"
         '';
       };
 
