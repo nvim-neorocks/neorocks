@@ -101,12 +101,12 @@ Here is an example of how to use it in a Nix flake:
 
 ### In a Nix shell
 
-```console
+```bash
 nix shell "github:nvim-neorocks/neorocks"
 # In the root of your lua project:
-luarocks init
+luarocks init --tree .
 # lua interpreters: lua, neolua [neovim 0.9] or neolua-nightly
-luarocks config --scope project lua_interpreter neolua
+luarocks config --scope project variables.LUA neolua
 luarocks test
 ```
 
@@ -119,11 +119,23 @@ luarocks test
 - Make sure `neolua` is installed or symlinked into the same directory as `luarocks`
   (e.g. `/usr/bin`).
 
-```console
+```bash
 # In the root of your lua project:
-luarocks init
+luarocks init --tree .
 luarocks config --scope project lua_version 5.1
 # lua interpreters: lua, neolua [neovim 0.9] or neolua-nightly
+```
+
+If using `luarocks >= 3.10.0`:
+
+```bash
+luarocks config --scope project variables.LUA neolua
+luarocks test
+```
+
+If using `luarocks <= 3.9.2`:
+
+```bash
 luarocks config --scope project lua_interpreter neolua
 luarocks test
 ```
