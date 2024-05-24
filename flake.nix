@@ -86,6 +86,7 @@
             alejandra
             markdownlint-cli
           ]);
+        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [pkgs.glibc];
         shellHook = ''
           ${self.checks.${system}.pre-commit-check.shellHook}
         '';
