@@ -14,7 +14,7 @@
       flake = false;
     };
 
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
@@ -24,121 +24,127 @@
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
   };
 
-  outputs = {
+  outputs = inputs @ {
     self,
     nixpkgs,
     pre-commit-hooks,
-    flake-utils,
+    flake-parts,
     neovim-nightly,
     ...
-  }: let
-    supportedSystems = [
-      "aarch64-linux"
-      "aarch64-darwin"
-      "x86_64-darwin"
-      "x86_64-linux"
-    ];
-    overlay = import ./nix/overlay.nix {neovim-input = neovim-nightly;};
-  in
-    flake-utils.lib.eachSystem supportedSystems (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          overlay
-        ];
-      };
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = [
+        "aarch64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
+      perSystem = {
+        config,
+        self',
+        inputs',
+        system,
+        ...
+      }: let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [
+            self.overlays.default
+          ];
+        };
 
-      pre-commit-check = pre-commit-hooks.lib.${system}.run {
-        src = self;
-        hooks = {
-          cabal2nix.enable = true;
-          alejandra = {
-            enable = true;
-            excludes = [
-              "neolua/default.nix"
-            ];
+        pre-commit-check = pre-commit-hooks.lib.${system}.run {
+          src = self;
+          hooks = {
+            cabal2nix.enable = true;
+            alejandra = {
+              enable = true;
+              excludes = [
+                "neolua/default.nix"
+              ];
+            };
+            editorconfig-checker.enable = true;
+            markdownlint.enable = true;
+            fourmolu.enable = true;
+            hpack.enable = true;
+            hlint.enable = true;
           };
-          editorconfig-checker.enable = true;
-          markdownlint.enable = true;
-          fourmolu.enable = true;
-          hpack.enable = true;
-          hlint.enable = true;
         };
-      };
 
-      neoluaShell = pkgs.haskellPackages.shellFor {
-        name = "neolua-shell";
-        packages = p: with p; [neolua-bin];
-        withHoogle = true;
-        buildInputs =
-          (with pkgs; [
-            haskell-language-server
-            cabal-install
-            zlib
-            haskellPackages.neolua-bin
+        neoluaShell = pkgs.haskellPackages.shellFor {
+          name = "neolua-shell";
+          packages = p: with p; [neolua-bin];
+          withHoogle = true;
+          buildInputs =
+            (with pkgs; [
+              haskell-language-server
+              cabal-install
+              zlib
+              haskellPackages.neolua-bin
+              neorocks
+            ])
+            ++ (with pre-commit-hooks.packages.${system}; [
+              hlint
+              hpack
+              fourmolu
+              cabal2nix
+              alejandra
+              markdownlint-cli
+            ]);
+          RT_DIR = pkgs.lib.makeLibraryPath [pkgs.glibc];
+          shellHook = ''
+            ${self.checks.${system}.pre-commit-check.shellHook}
+            echo "You may need to pass RT_DIR to luarocks test"
+            echo "RT_DIR=$RT_DIR"
+          '';
+        };
+
+        neorocksShell = pkgs.mkShell {
+          name = "neorocks-shell";
+          buildInputs = with pkgs; [
             neorocks
-          ])
-          ++ (with pre-commit-hooks.packages.${system}; [
-            hlint
-            hpack
-            fourmolu
-            cabal2nix
-            alejandra
-            markdownlint-cli
-          ]);
-        RT_DIR = pkgs.lib.makeLibraryPath [pkgs.glibc];
-        shellHook = ''
-          ${self.checks.${system}.pre-commit-check.shellHook}
-          echo "You may need to pass RT_DIR to luarocks test"
-          echo "RT_DIR=$RT_DIR"
-        '';
-      };
+            neolua-stable-wrapper
+            neolua-nightly-wrapper
+          ];
+        };
+      in {
+        devShells = {
+          default = neoluaShell;
+          inherit neoluaShell neorocksShell;
+        };
 
-      neorocksShell = pkgs.mkShell {
-        name = "neorocks-shell";
-        buildInputs = with pkgs; [
-          neorocks
-          neolua-stable-wrapper
-          neolua-nightly-wrapper
-        ];
-      };
-    in {
-      devShells = {
-        default = neoluaShell;
-        inherit neoluaShell neorocksShell;
-      };
+        packages = rec {
+          default = neorocks;
+          neolua-bin = pkgs.haskellPackages.neolua-bin;
+          inherit
+            (pkgs)
+            neorocks
+            neovim-nightly
+            neolua-stable-wrapper
+            neolua-nightly-wrapper
+            busted-stable
+            busted-nightly
+            ;
+        };
 
-      packages = rec {
-        default = neorocks;
-        neolua-bin = pkgs.haskellPackages.neolua-bin;
-        inherit
-          (pkgs)
-          neorocks
-          neovim-nightly
-          neolua-stable-wrapper
-          neolua-nightly-wrapper
-          busted-stable
-          busted-nightly
-          ;
-      };
-
-      checks = {
-        inherit pre-commit-check;
-        neorocks-test = pkgs.neorocksTest {
-          src = ./testproject;
-          name = "neorocks-test";
-          pname = "testproject";
-          neovim = pkgs.neovim-nightly;
-          luaPackages = ps:
-            with ps; [
-              plenary-nvim
-            ];
+        checks = {
+          inherit pre-commit-check;
+          neorocks-test = pkgs.neorocksTest {
+            src = ./testproject;
+            name = "neorocks-test";
+            pname = "testproject";
+            neovim = pkgs.neovim-nightly;
+            luaPackages = ps:
+              with ps; [
+                plenary-nvim
+              ];
+          };
         };
       };
-    })
-    // {
-      overlays = {
-        default = overlay;
+      flake = {
+        overlays = {
+          default = import ./nix/overlay.nix {neovim-input = neovim-nightly;};
+        };
       };
     };
 }
