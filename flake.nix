@@ -16,9 +16,9 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    pre-commit-hooks = {
-      url = "github:cachix/pre-commit-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
@@ -27,7 +27,7 @@
   outputs = inputs @ {
     self,
     nixpkgs,
-    pre-commit-hooks,
+    git-hooks,
     flake-parts,
     neovim-nightly,
     ...
@@ -53,7 +53,7 @@
           ];
         };
 
-        pre-commit-check = pre-commit-hooks.lib.${system}.run {
+        pre-commit-check = git-hooks.lib.${system}.run {
           src = self;
           hooks = {
             cabal2nix.enable = true;
@@ -83,14 +83,7 @@
               haskellPackages.neolua-bin
               neorocks
             ])
-            ++ (with pre-commit-hooks.packages.${system}; [
-              hlint
-              hpack
-              fourmolu
-              cabal2nix
-              alejandra
-              markdownlint-cli
-            ]);
+            ++ self.checks.${system}.pre-commit-check.enabledPackages;
           RT_DIR = pkgs.lib.makeLibraryPath [pkgs.glibc];
           shellHook = ''
             ${self.checks.${system}.pre-commit-check.shellHook}
