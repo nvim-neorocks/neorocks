@@ -11,7 +11,7 @@
     <strong>
       neorocks
       <br />
-      Run <a href="https://lunarmodules.github.io/busted/">busted</a> tests with <a href="https://neovim.io/">Neovim</a>.
+      Run <a href="https://lunarmodules.github.io/busted/">busted</a> tests with <a href="https://neovim.io/">Neovim in your Nix CI</a>.
     </strong>
   </p>
   <h2>🌒</h>
@@ -25,26 +25,19 @@
 [![GPL2 License][license-shield]][license-url]
 [![Issues][issues-shield]][issues-url]
 [![Build Status][ci-shield]][ci-url]
-[![Hackage][hackage-shield]][hackage-url]
 
 ## What?
 
-- `neorocks` is a [nix](https://nixos.org/) derivation
+- `neorocksTest` is a [nix](https://nixos.org/) function
   that allows you to run [`luarocks test`](https://github.com/luarocks/luarocks/wiki/test)
   with [Neovim](https://neovim.io/) as the Lua interpreter.
-- `neolua` is a CLI wrapper around Neovim,
-  which maps Lua's CLI arguments to Neovim's CLI arguments.
-  It is used by `neorocks`.
-- This project's README provides tuturial for using [`busted`](https://lunarmodules.github.io/busted/)
+- This project's README provides tutorials for using [`busted`](https://lunarmodules.github.io/busted/)
   to test Neovim plugins (with and without Nix).
 
 ## Why?
 
 So you can use [`busted`](https://lunarmodules.github.io/busted/) to test your
 Neovim plugins with access to the Neovim Lua API.
-
-This was designed for use with the [`luarocks-tag-release`](https://github.com/nvim-neorocks/luarocks-tag-release)
-GitHub action.
 
 ## How?
 
@@ -103,44 +96,14 @@ Here is an example of how to use it in a Nix flake:
 
 ```bash
 nix shell "github:nvim-neorocks/neorocks"
-# In the root of your lua project:
-luarocks init --tree .
-# lua interpreters: lua, neolua [neovim 0.9] or neolua-nightly
-luarocks config --scope project variables.LUA neolua
-luarocks test
+busted
 ```
 
-### Without Nix (using `neolua`)
+### Without Nix (using `nlua`)
 
-- Install `lua 5.1` and `luarocks` with your distribution's package manager.
-- `neolua` is [available on Hackage](https://hackage.haskell.org/package/neolua-1.0.0).
-  You can install it using the `cabal-install` package from your
-  distributions package manager (if using Linux or Mac).
-- Make sure `neolua` is installed or symlinked into the same directory as `luarocks`
-  (e.g. `/usr/bin`).
+See: [mfussenegger/nlua](https://github.com/mfussenegger/nlua)
 
-```bash
-# In the root of your lua project:
-luarocks init --tree .
-luarocks config --scope project lua_version 5.1
-# lua interpreters: lua, neolua [neovim 0.9] or neolua-nightly
-```
-
-If using `luarocks >= 3.10.0`:
-
-```bash
-luarocks config --scope project variables.LUA neolua
-luarocks test
-```
-
-If using `luarocks <= 3.9.2`:
-
-```bash
-luarocks config --scope project lua_interpreter neolua
-luarocks test
-```
-
-### Without `neolua`
+### Without `nlua`
 
 To run `busted` tests locally, without `neorocks` or `neolua`...
 
@@ -173,12 +136,12 @@ nvim -u NONE \
 
 ### With GitHub Actions
 
-- We recommend using the [luarocks-tag-release](https://github.com/nvim-neorocks/luarocks-tag-release)
-  action, which uses `neorocks` to run tests and publishes your package
-  to luarocks, or to use the `neorocksTest` helper in a nix-based CI.
+- We recommend using the [nvim-busted-action](https://github.com/nvim-neorocks/nvim-busted-action)
+  action, which uses `nlua` to run tests,
+  or to use the `neorocksTest` helper in a nix-based CI.
 - Alternatively, you can see the `tests` job of
   [this project's CI](./.github/workflows/nix-build.yml)
-  for an example on how to use `neorocks` with GitHub actions manually.
+  for an example on how to use `neorocksTest` with GitHub actions manually.
 
 <!-- MARKDOWN LNIKS & IMAGES -->
 [neovim-shield]: https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white
@@ -193,5 +156,3 @@ nvim -u NONE \
 [license-url]: https://github.com/nvim-neorocks/neorocks/blob/master/LICENSE
 [ci-shield]: https://img.shields.io/github/actions/workflow/status/nvim-neorocks/neorocks/nix-build.yml?style=for-the-badge
 [ci-url]: https://github.com/nvim-neorocks/neorocks/actions/workflows/nix-build.yml
-[hackage-shield]: https://img.shields.io/hackage/v/neolua.svg?style=for-the-badge
-[hackage-url]: https://hackage.haskell.org/package/neolua
