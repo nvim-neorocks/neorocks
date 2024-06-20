@@ -84,5 +84,4 @@ in {
     neovim-nightly
     busted-nlua
     ;
-  lua51Packages = final.lua5_1.pkgs;
 }
