@@ -45,7 +45,7 @@ with prev.lib; let
       "luaPackages"
       "extraPackages"
     ];
-    lua5_1 = prev.pkgs.lua5_1;
+    lua5_1 = prev.lua5_1;
   in (lua5_1.pkgs.buildLuarocksPackage (rest
     // {
       inherit
@@ -84,5 +84,5 @@ in {
     neovim-nightly
     busted-nlua
     ;
-  lua51Packages = lua5_1.pkgs;
+  lua51Packages = final.lua5_1.pkgs;
 }
