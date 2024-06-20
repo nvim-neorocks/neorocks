@@ -24,8 +24,8 @@ jobs:
         os:
           - ubuntu-latest
         attribute:
-          - .#neorocks
           - .#neovim-nightly
+          - .#busted-nlua
           - .#devShells.x86_64-linux.default
     steps:
     - uses: actions/checkout@v4

@@ -1,100 +1,29 @@
 {neovim-input}: final: prev:
 with prev.haskell.lib;
 with prev.lib; let
-  haskellPackages = prev.haskellPackages.override (old: {
-    overrides = prev.lib.composeExtensions (old.overrides or (_: _: {})) (
-      self: super: let
-        neoluaPkg = buildFromSdist (
-          overrideCabal (super.callPackage ../neolua/default.nix {})
-          (old: {
-            configureFlags =
-              (old.configureFlags or [])
-              ++ [
-                "--ghc-options=-O2"
-                "--ghc-options=-j"
-                "--ghc-options=+RTS"
-                "--ghc-options=-A256m"
-                "--ghc-options=-n4m"
-                "--ghc-options=-RTS"
-                "--ghc-options=-Wall"
-                "--ghc-options=-Werror"
-                "--ghc-options=-Wincomplete-uni-patterns"
-                "--ghc-options=-Wincomplete-record-updates"
-                "--ghc-options=-Wpartial-fields"
-                "--ghc-options=-Widentities"
-                "--ghc-options=-Wredundant-constraints"
-                "--ghc-options=-Wcpp-undef"
-                "--ghc-options=-Wunused-packages"
-                "--ghc-options=-Wno-deprecations"
-              ];
-          })
-        );
-        neolua-bin = prev.haskellPackages.generateOptparseApplicativeCompletions ["neolua"] neoluaPkg;
-      in {
-        inherit neolua-bin;
-      }
-    );
-  });
-
   neovim-nightly = neovim-input.packages.${prev.system}.neovim;
 
-  mkNeoluaWrapper = name: neovim:
-    prev.pkgs.writeShellApplication {
-      inherit name;
-      checkPhase = "";
-      runtimeInputs = [
-        haskellPackages.neolua-bin
-        neovim
+  busted-nlua = final.lua5_1.pkgs.busted.overrideAttrs (oa: {
+    propagatedBuildInputs =
+      oa.propagatedBuildInputs
+      ++ [
+        final.lua5_1.pkgs.nlua
       ];
-      text = ''
-        neolua "$@";
+    nativeBuildInputs =
+      oa.nativeBuildInputs
+      ++ [
+        final.makeWrapper
+      ];
+    postInstall =
+      oa.postInstall
+      +
+      /*
+      bash
+      */
+      ''
+        wrapProgram $out/bin/busted --add-flags "--lua=nlua"
       '';
-    };
-
-  neolua-stable-wrapper = mkNeoluaWrapper "neolua" prev.pkgs.neovim-unwrapped;
-
-  neolua-nightly-wrapper = mkNeoluaWrapper "neolua-nightly" neovim-nightly;
-
-  lua5_1 =
-    (prev.pkgs.lua5_1.overrideAttrs (old: {
-      postInstall = ''
-        ${old.postInstall}
-        ln -s ${neolua-stable-wrapper}/bin/neolua $out/bin/neolua
-        ln -s ${neolua-nightly-wrapper}/bin/neolua-nightly $out/bin/neolua-nightly
-      '';
-    }))
-    .override {
-      self = lua5_1;
-    };
-
-  mkBustedWrapper = neolua-wrapper: bin:
-    prev.lua5_1.pkgs.busted.overrideAttrs (oa: {
-      postInstall = ''
-        ${oa.postInstall}
-        substituteInPlace ''$out/bin/busted \
-          --replace "${prev.lua5_1}/bin/lua" "${neolua-wrapper}/bin/${bin}"
-      '';
-    });
-
-  busted-stable = mkBustedWrapper neolua-stable-wrapper "neolua";
-
-  busted-nightly = mkBustedWrapper neolua-nightly-wrapper "neolua-nightly";
-
-  mkNeorocks = neolua-pkgs:
-    prev.pkgs.symlinkJoin {
-      name = "neorocks";
-      paths =
-        [
-          final.lua5_1
-          final.lua51Packages.luarocks
-        ]
-        ++ neolua-pkgs;
-    };
-
-  neorocks = mkNeorocks [
-    neolua-stable-wrapper
-    neolua-nightly-wrapper
-  ];
+  });
 
   neorocksTest = {
     src,
@@ -116,8 +45,6 @@ with prev.lib; let
       "luaPackages"
       "extraPackages"
     ];
-    neolua-wrapper = mkNeoluaWrapper "neolua" neovim;
-    busted = mkBustedWrapper neolua-wrapper "neolua";
     lua5_1 = prev.pkgs.lua5_1;
   in (lua5_1.pkgs.buildLuarocksPackage (rest
     // {
@@ -131,23 +58,31 @@ with prev.lib; let
         then ""
         else "${name}-";
       propagatedBuildInputs =
-        [
-          busted
-        ]
-        ++ luaPackages lua5_1.pkgs;
+        luaPackages lua5_1.pkgs
+        ++ (with lua5_1.pkgs; [
+          busted-nlua
+          nlua
+        ]);
       doCheck = true;
-      nativeCheckInputs = extraPackages;
+      nativeCheckInputs =
+        extraPackages
+        ++ (with lua5_1.pkgs; [
+          nlua
+          busted
+          neovim
+        ]);
+      checkPhase = ''
+        runHook preCheck
+        export HOME=$(mktemp -d)
+        luarocks test
+        runHook postCheck
+      '';
     }));
 in {
   inherit
-    haskellPackages
-    neorocks
     neorocksTest
     neovim-nightly
-    neolua-stable-wrapper
-    neolua-nightly-wrapper
-    busted-stable
-    busted-nightly
+    busted-nlua
     ;
   lua51Packages = lua5_1.pkgs;
 }

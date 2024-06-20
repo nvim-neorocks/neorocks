@@ -71,52 +71,27 @@
           };
         };
 
-        neoluaShell = pkgs.haskellPackages.shellFor {
-          name = "neolua-shell";
-          packages = p: with p; [neolua-bin];
-          withHoogle = true;
-          buildInputs =
-            (with pkgs; [
-              haskell-language-server
-              cabal-install
-              zlib
-              haskellPackages.neolua-bin
-              neorocks
-            ])
-            ++ self.checks.${system}.pre-commit-check.enabledPackages;
-          RT_DIR = pkgs.lib.makeLibraryPath [pkgs.glibc];
-          shellHook = ''
-            ${self.checks.${system}.pre-commit-check.shellHook}
-            echo "You may need to pass RT_DIR to luarocks test"
-            echo "RT_DIR=$RT_DIR"
-          '';
-        };
-
         neorocksShell = pkgs.mkShell {
           name = "neorocks-shell";
-          buildInputs = with pkgs; [
-            neorocks
-            neolua-stable-wrapper
-            neolua-nightly-wrapper
-          ];
+          buildInputs =
+            self.checks.${system}.pre-commit-check.enabledPackages
+            ++ (with pkgs; [
+              luarocks
+              busted-nlua
+            ]);
         };
       in {
         devShells = {
-          default = neoluaShell;
-          inherit neoluaShell neorocksShell;
+          default = neorocksShell;
+          inherit neorocksShell;
         };
 
         packages = rec {
-          default = neorocks;
-          neolua-bin = pkgs.haskellPackages.neolua-bin;
+          default = busted-nlua;
           inherit
             (pkgs)
-            neorocks
+            busted-nlua
             neovim-nightly
-            neolua-stable-wrapper
-            neolua-nightly-wrapper
-            busted-stable
-            busted-nightly
             ;
         };
 
