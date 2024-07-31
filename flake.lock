@@ -247,11 +247,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1722299518,
-        "narHash": "sha256-0hRxk6iKiPeSNAxIauHtr3oDSoHcDkt4Ia3XXuGwy60=",
+        "lastModified": 1722378708,
+        "narHash": "sha256-MxG/Hfm7+BHIKXOAAoNJmTYvQ+EO0ezACqUYR55eQ4w=",
         "owner": "nix-community",
         "repo": "neovim-nightly-overlay",
-        "rev": "cbf1a4829aad170bcf35ca417617d3ff29f76267",
+        "rev": "e84a246c521f0c6348a0d01da3dfe0cd611f078a",
         "type": "github"
       },
       "original": {
